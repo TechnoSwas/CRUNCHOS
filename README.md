@@ -7,6 +7,7 @@ Our primary objective is to create an OS capable of reliably running:
 
 * Linux applications
 * Windows 10/11 applications
+* Our own file type
 
 The operating system will also feature a custom-built browser developed by Enrico.
 
