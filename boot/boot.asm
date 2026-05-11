@@ -3,17 +3,14 @@
 
 start:
     mov ah, 0x0E
+    mov si, msg
 
-print:
-    mov si, message
-
-.loop:
+.print:
     lodsb
     cmp al, 0
     je load_kernel
-
     int 0x10
-    jmp .loop
+    jmp .print
 
 load_kernel:
     mov ah, 0x02
@@ -26,7 +23,7 @@ load_kernel:
 
     jmp 0x0000:0x1000
 
-message db 'CrunchOS', 0
+msg db "CrunchOS Boot OK", 0
 
 times 510-($-$$) db 0
 dw 0xAA55
