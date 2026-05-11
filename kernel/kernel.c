@@ -1,19 +1,13 @@
 volatile unsigned short* vga = (unsigned short*)0xB8000;
 
-void print(const char* str, unsigned char color) {
-    int i = 0;
-
-    while (str[i]) {
-        vga[i] = (color << 8) | str[i];
-        i++;
-    }
-}
-
 void kernel_main() {
-    print("Kernel Loaded!", 0x0A);
+    vga[0] = (0x0A << 8) | 'K';
+    vga[1] = (0x0A << 8) | 'O';
+    vga[2] = (0x0A << 8) | 'S';
 
     while (1) {
-        __asm__("hlt");
+        vga[3] = (0x0F << 8) | '1';
+        vga[3] = (0x0F << 8) | '2';
     }
 }
 
