@@ -1,14 +1,22 @@
-void main() {
-    // VGA text buffer lives at 0xB8000
-    char* vga = (char*)0xB8000;
-    
-    const char* msg = "CrunchOS Kernel Loaded!";
+volatile unsigned short* vga = (unsigned short*)0xB8000;
+
+void print(const char* str, unsigned char color) {
     int i = 0;
-    while (msg[i]) {
-        vga[i * 2]     = msg[i];  // character
-        vga[i * 2 + 1] = 0x0A;   // green text
+
+    while (str[i]) {
+        vga[i] = (color << 8) | str[i];
         i++;
     }
-    
-    while(1); // hang forever
+}
+
+void kernel_main() {
+    print("Kernel Loaded!", 0x0A);
+
+    while (1) {
+        __asm__("hlt");
+    }
+}
+
+void _start() {
+    kernel_main();
 }
