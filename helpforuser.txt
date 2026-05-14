@@ -1,0 +1,55 @@
+Hey! Me and TechnoSwas are building an OS called CrunchOS together in the same GitHub Codespace.
+Here's everything you need to know:
+
+GITHUB: https://github.com/TechnoSwas/CRUNCHOS
+CODESPACE: probable-waffle-69r67g5rwwqjh4jj7.github.dev
+
+=== WHAT IS CRUNCHOS ===
+A real x86 operating system built from scratch in Assembly and C.
+It boots via GRUB, runs a C kernel, and displays on screen via VGA text mode.
+We view it in the browser using noVNC + QEMU.
+
+=== WHAT WORKS RIGHT NOW ===
+- GRUB boots the ISO
+- Kernel loads and runs
+- Setup screen with 3 working options:
+  [1] Install CrunchOS - shows progress bar with install steps
+  [2] Boot Live Disk - boots into a shell (commands: help, about, clear, exit)
+  [3] Repair Installation - shows system info, can reinstall bootloader
+- Keyboard input works
+- noVNC lets us see the screen in the browser
+
+=== HOW TO VIEW THE OS ===
+pkill qemu && pkill websockify && sleep 1
+qemu-system-x86_64 -cdrom crunchos.iso -boot d -m 512 -vga std -vnc :0,password=off &
+sleep 2 && websockify --web=/usr/share/novnc/ 6080 localhost:5900 &
+Then open port 6080 in Ports tab, make it Public, open vnc_lite.html
+
+=== HOW TO BUILD ===
+gcc -m32 -ffreestanding -fno-pie -fno-stack-protector -O0 -c kernel/kernel.c -o kernel.o
+ld -m elf_i386 -T link.ld -o iso/boot/kernel.elf kernel.o
+grub-mkrescue -o crunchos.iso iso
+
+=== HOW TO SAVE CHANGES ===
+git add .
+git commit -m "describe what you changed"
+git push
+ALWAYS push after changes so nothing gets lost!
+
+=== YOUR TASKS ===
+1. Make the installer actually work:
+   - Ask user to type their name
+   - Ask for a password
+   - Show a disk partition screen
+   - Show a reboot screen at the end
+
+2. Add more shell commands:
+   - ls, version, crunch, whoami
+
+3. Design the .crunch app format:
+   - Magic bytes: CRNCH
+   - App name, version, entry point
+   - CODE and DATA sections
+
+=== ALL THE CODE IS IN ===
+kernel/kernel.c - edit this file for everything
